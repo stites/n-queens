@@ -55,8 +55,13 @@
     },
 
 
-    // todo: fill in all these functions - they'll help you!
 
+    /*=========================================================================
+    =                 TODO: fill in these Helper Functions                    =
+    =========================================================================*/
+
+    // ROWS - run from left to right
+    // --------------------------------------------------------------
     hasRowConflictAt: function(rowIndex){
       return false; // fixme
     },
@@ -65,6 +70,10 @@
       return false; // fixme
     },
 
+
+
+    // COLUMNS - run from top to bottom
+    // --------------------------------------------------------------
     hasColConflictAt: function(colIndex){
       return false; // fixme
     },
@@ -73,6 +82,10 @@
       return false; // fixme
     },
 
+
+
+    // Major Diagonals - run from top-right to bottom-left
+    // --------------------------------------------------------------
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow){
       return false; // fixme
     },
@@ -81,6 +94,10 @@
       return false; // fixme
     },
 
+
+
+    // Minor Diagonals - run from top-left to bottom-right
+    // --------------------------------------------------------------
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow){
       return false; // fixme
     },
@@ -88,6 +105,9 @@
     hasAnyMinorDiagonalConflicts: function(){
       return false; // fixme
     }
+
+    /*--------------------  End of Helper Functions  ---------------------*/
+
 
   });
 
