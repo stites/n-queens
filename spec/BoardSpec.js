@@ -22,6 +22,7 @@ describe("Board", function() {
     ]);
   });
 
+// Rows go from west to east
   it("should find row conflicts", function() {
     verifyConflictTypes(['row', 'rooks', 'queens'], [
       [0, 0, 0, 0],
@@ -31,6 +32,7 @@ describe("Board", function() {
     ]);
   });
 
+// Columns go from north to south
   it("should find column conflicts", function() {
     verifyConflictTypes(['col', 'rooks', 'queens'], [
       [1, 0, 0, 0],
@@ -40,6 +42,8 @@ describe("Board", function() {
     ]);
   });
 
+// Major diagonals go from north-east to south-west on a 
+// chess board.
   it("should find major diagonal conflicts", function() {
     verifyConflictTypes(['majorDiagonal', 'queens'], [
       [0, 1, 0, 0],
@@ -49,6 +53,8 @@ describe("Board", function() {
     ]);
   });
 
+// Minor diagonals go from north-west to south-east on a 
+// chess board.
   it("should find minor diagonal conflicts", function() {
     verifyConflictTypes(['minorDiagonal', 'queens'], [
       [0, 0, 1, 0],
