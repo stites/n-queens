@@ -6,6 +6,7 @@ describe("solvers", function() {
     it('finds a valid solution for n of 0-8', function(){
       _.range(1, 8).map(function(n){
         var solutionBoard = new Board(findNRooksSolution(n));
+        expect(solutionBoard.get('n')).to.equal(n);
         expect(solutionBoard.hasAnyRooksConflicts()).to.be.equal(false);
       });
     });
@@ -29,6 +30,7 @@ describe("solvers", function() {
     it('finds a valid solution for n of 0-8', function(){
       _.range(1, 8).map(function(n){
         var solutionBoard = new Board(findNQueensSolution(n));
+        expect(solutionBoard.get('n')).to.equal(n);
         expect(solutionBoard.hasAnyQueensConflicts()).to.be.equal(false);
       });
     });
