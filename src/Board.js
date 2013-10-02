@@ -6,7 +6,6 @@
 
   window.Board = Backbone.Model.extend({
 
-    // ignore this
     initialize: function (params) {
       if (typeof params == "undefined" || params == null) {
         console.log('Good guess! But to use the Board() constructor, you must pass it an argument in one of the following formats:');
@@ -19,35 +18,29 @@
       }
     },
 
-    // ignore this
     rows: function(){
       return _(_.range(this.get('n'))).map(function(rowIndex){
         return this.get(rowIndex);
       }, this);
     },
 
-    // ignore this
     togglePiece: function(rowIndex, colIndex){
       this.get(rowIndex)[colIndex] = + !this.get(rowIndex)[colIndex];
       this.trigger('change');
     },
 
-    // ignore this
     _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex){
       return colIndex - rowIndex;
     },
 
-    // ignore this
     _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex){
       return colIndex + rowIndex;
     },
 
-    // ignore this
     hasAnyRooksConflicts: function(){
       return this.hasAnyRowConflicts() || this.hasAnyColConflicts();
     },
 
-    // ignore this
     hasAnyQueenConflictsOn: function(rowIndex, colIndex){
       return (
         this.hasRowConflictAt(rowIndex) ||
@@ -57,12 +50,10 @@
       );
     },
 
-    // ignore this
     hasAnyQueensConflicts: function(){
       return this.hasAnyRooksConflicts() || this.hasAnyMajorDiagonalConflicts() || this.hasAnyMinorDiagonalConflicts();
     },
 
-    // ignore this
     _isInBounds: function(rowIndex, colIndex){
       return (
         0 <= rowIndex && rowIndex < this.get('n') &&
@@ -146,7 +137,6 @@
 
   });
 
-  // ignore this
   var makeEmptyMatrix = function(n){
     return _(_.range(n)).map(function(){
       return _(_.range(n)).map(function(){
