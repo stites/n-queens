@@ -79,9 +79,9 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex){
-      return _.reduce(this.rows()[rowIndex], function (memo, item) {
-        return memo += item;
-      }) > 1;
+      return _.filter( this.rows()[rowIndex], function(i){
+        return i === 1;
+      }).length > 1;
     },
 
     hasAnyRowConflicts: function(){
@@ -95,14 +95,33 @@
     // COLUMNS - run from top to bottom
     // --------------------------------------------------------------
     //
+    // return an array of columns
+    cols: function(){
+      var board = this.rows();
+      var cols = [];
+      _.each(board, function (row, rowidx){
+        _.each(row, function (pos, colidx) {
+          cols[colidx] = cols[colidx] || [];
+          cols[colidx].push(pos);
+        })
+      });
+      return cols;
+    },
+
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex){
-      return false; // fixme
+      return _.filter( this.cols()[colIndex], function(i){
+        return i === 1;
+      }).length > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function(){
-      return false; // fixme
+      var that = this;
+      var board = this.cols();
+      return _.reduce(board, function(memo, item, idx){
+        return memo || that.hasColConflictAt(idx);
+      }, false);
     },
 
 
