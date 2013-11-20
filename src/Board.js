@@ -79,19 +79,14 @@
     // 
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex){
-      var count = 0;
-      var row = this.attributes[rowIndex];
-      for(var x = 0; x < 4; x++){
-        if(row[x] > 0){
-          count++;
-        }
-      }
-      return count > 1;
+      return _.filter( this.rows()[rowIndex], function(i){
+        return i === 1;
+      }).length > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function(){
-      for(var y = 0; y < 4; y++){
+      for(var y = 0; y < this.attributes.n; y++){
         if(this.hasRowConflictAt(y)){
           return true;
         }
@@ -111,20 +106,15 @@
         count  = 0,
         board  = this.attributes;
 
-      for(var y = 0; y < 4; y++){
+      for(var y = 0; y < this.attributes.n; y++){
         column.push(board[y][colIndex]);
       }
-      for(var x = 0; x < 4; x++){
-        if(column[x] > 0){
-          count++;
-        }
-      }
-      return count > 1;
+      return _.reduce(column, function(result, n){ return result + n }, 0) > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function(){
-      for(var x = 0; x < 4; x++){
+      for(var x = 0; x < this.attributes.n; x++){
         if(this.hasColConflictAt(x)){
           return true;
         }
@@ -141,21 +131,15 @@
     hasMajorDiagonalConflictAt: function(x, y){
       var diagonal = [];
       var i;
-      var count = 0;
       for(i = 0; i < 4; i++){
         if(this.valueAt(x,y) === undefined){
           break;
         }
-        diagonal.concat(this.valueAt(x,y));
+        diagonal.push(this.valueAt(x,y));
         x++;
         y++;
       }
-      for(i = 0; i < diagonal.length; i++){
-        if (diagonal[i] > 0){
-          count++;
-        }
-      }
-      return count > 1;
+      return _.reduce(diagonal, function(result, n){ return result + n }, 0) > 1;
     },
 
     valueAt: function(x, y){
@@ -169,12 +153,12 @@
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function(){
-      for(var x = 0; x < 4; x++){
+      for(var x = 0; x < this.attributes.n ; x++){
         if(this.hasMajorDiagonalConflictAt(x, 0)){
           return true;
         }
       }
-      for(var y = 1; y < 4; y++){
+      for(var y = 1; y < this.attributes.n ; y++){
         if(this.hasMajorDiagonalConflictAt(0, y)){
           return true;
         }
