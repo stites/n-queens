@@ -79,12 +79,24 @@
     // 
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex){
-      return false; // fixme
+      var count = 0;
+      var row = this.attributes[rowIndex];
+      for(var x = 0; x < 4; x++){
+        if(row[x] > 0){
+          count++;
+        }
+      }
+      return count > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function(){
-      return false; // fixme
+      for(var y = 0; y < 4; y++){
+        if(this.hasRowConflictAt(y)){
+          return true;
+        }
+      }
+      return false;
     },
 
 
@@ -94,12 +106,30 @@
     // 
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex){
-      return false; // fixme
+      var 
+        column = [],
+        count  = 0,
+        board  = this.attributes;
+
+      for(var y = 0; y < 4; y++){
+        column.push(board[y][colIndex]);
+      }
+      for(var x = 0; x < 4; x++){
+        if(column[x] > 0){
+          count++;
+        }
+      }
+      return count > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function(){
-      return false; // fixme
+      for(var x = 0; x < 4; x++){
+        if(this.hasColConflictAt(x)){
+          return true;
+        }
+      }
+      return false;
     },
 
 
@@ -108,13 +138,48 @@
     // --------------------------------------------------------------
     // 
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow){
-      return false; // fixme
+    hasMajorDiagonalConflictAt: function(x, y){
+      var diagonal = [];
+      var i;
+      var count = 0;
+      for(i = 0; i < 4; i++){
+        if(this.valueAt(x,y) === undefined){
+          break;
+        }
+        diagonal.concat(this.valueAt(x,y));
+        x++;
+        y++;
+      }
+      for(i = 0; i < diagonal.length; i++){
+        if (diagonal[i] > 0){
+          count++;
+        }
+      }
+      return count > 1;
+    },
+
+    valueAt: function(x, y){
+      var value = undefined;
+      var board = this.attributes;
+      if(board[y] && board[y][x] !== undefined){
+        value = board[y][x];
+      }
+      return value;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function(){
-      return false; // fixme
+      for(var x = 0; x < 4; x++){
+        if(this.hasMajorDiagonalConflictAt(x, 0)){
+          return true;
+        }
+      }
+      for(var y = 1; y < 4; y++){
+        if(this.hasMajorDiagonalConflictAt(0, y)){
+          return true;
+        }
+      }
+      return false;
     },
 
 
