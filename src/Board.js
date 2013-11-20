@@ -63,12 +63,12 @@
 
 
 /*
-         _             _     _                     
-     ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _ 
+         _             _     _
+     ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
-    \__ \ || (_| | |  | |_  | | | |  __/ | |  __/_ 
+    \__ \ || (_| | |  | |_  | | | |  __/ | |  __/_
     |___/\__\__,_|_|   \__| |_| |_|\___|_|  \___(_)
-                                                   
+
  */
     /*=========================================================================
     =                 TODO: fill in these Helper Functions                    =
@@ -76,22 +76,25 @@
 
     // ROWS - run from left to right
     // --------------------------------------------------------------
-    // 
+    //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex){
-      return false; // fixme
+      return _.reduce(this.rows()[rowIndex], function (memo, item) {
+        return memo += item;
+      }) > 1;
     },
 
-    // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function(){
-      return false; // fixme
+      var that = this;
+      var board = this.rows();
+      return _.reduce(board, function(memo, item, idx){
+        return memo || that.hasRowConflictAt(idx);
+      }, false);
     },
-
-
 
     // COLUMNS - run from top to bottom
     // --------------------------------------------------------------
-    // 
+    //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex){
       return false; // fixme
@@ -106,7 +109,7 @@
 
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
-    // 
+    //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow){
       return false; // fixme
@@ -121,7 +124,7 @@
 
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
-    // 
+    //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow){
       return false; // fixme
