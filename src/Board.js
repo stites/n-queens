@@ -71,8 +71,25 @@
                                                    
  */
     /*=========================================================================
-    =                 TODO: fill in these Helper Functions                    =
     =========================================================================*/
+    // UTILITY FUNCTIONS:
+    // --------------------------------------------------------------
+    valueAt: function(x, y){
+      var value = undefined;
+      var board = this.attributes;
+      if(board[y] && board[y][x] !== undefined){
+        value = board[y][x];
+      }
+      return value;
+    },
+
+    insert: function(x, y, value){
+      this.attributes[y][x] = value;
+    },
+
+    countThings: function (thing) {
+      return _(this.rows()).chain().flatten().filter(function(i){return i === thing}).value().length
+    },
 
     // ROWS - run from left to right
     // --------------------------------------------------------------
@@ -139,19 +156,6 @@
         y++;
       }
       return _.filter( diagonal, function(i){ return i === 1; }).length > 1;
-    },
-
-    valueAt: function(x, y){
-      var value = undefined;
-      var board = this.attributes;
-      if(board[y] && board[y][x] !== undefined){
-        value = board[y][x];
-      }
-      return value;
-    },
-
-    insert: function(x, y, value){
-      this.attributes[y][x] = value;
     },
 
     // test if any major diagonals on this board contain conflicts
