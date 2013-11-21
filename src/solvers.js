@@ -31,9 +31,10 @@ window.findNRooksSolution = function(n){
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n, board, count){
-  debugger;
   count = count || 0;
   board = board || new Board({'n': n });
+  board = new Board(board.rows());
+
   _.each(board.rows(), function (row, yidx) {
     _.each(row, function (cell, xidx) {
       if (cell === 0){
@@ -42,29 +43,38 @@ window.countNRooksSolutions = function(n, board, count){
       if (board.hasAnyRooksConflicts()){
         board.insert(xidx, yidx, 'X');
       } else {
-        board.insert(xidx, yidx, 0);
+        if(cell !== 1 && cell !== 'X'){
+          board.insert(xidx, yidx, 0);
+        }
       }
     });
   });
-  if ( !board.countThings(0) ){
+
+  // if (JSON.stringify(board.rows()) === JSON.stringify([[1,"X"],["X",1]])){
+  //   debugger;
+  // }
+  console.table(board.rows());
+  if ( board.countThings(0) === 0 ){
     // countThings will count the number of the
     // passed in value that are contained in the board
-    if (board.countThings(1) > n){
+    if (board.countThings(1) >= n){
       count++;
     }
   } else {
     _.each(board.rows(), function (row, yidx) {
       _.each(row, function (cell, xidx) {
         if (cell === 0){
+
+          // var dupedBoard = new Board(board.rows());
           board.insert(xidx, yidx, 1); //inserting fo realz
-          var dupeBoard = Object.create(board);
-          countNRooksSolutions(n, dupeBoard, count);
+          count += countNRooksSolutions(n, board, count);
+          if (count ===1){debugger;}
         }
       });
     });
   }
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  console.log('Number of solutions for ' + n + ' rooks:', count);
   return count;
 };
 

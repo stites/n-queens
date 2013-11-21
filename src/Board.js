@@ -88,7 +88,11 @@
     },
 
     countThings: function (thing) {
-      return _(this.rows()).chain().flatten().filter(function(i){return i === thing}).value().length
+      var everything = _.flatten(this.rows());
+      var justTheThings = _.filter(everything, function(item){
+        return item === thing;
+      });
+      return justTheThings.length;
     },
 
     // ROWS - run from left to right
