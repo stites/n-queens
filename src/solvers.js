@@ -33,7 +33,6 @@ window.findNRooksSolution = function(n){
 window.countNRooksSolutions = function(n, board, count){
   count = count || 0;
   board = board || new Board({'n': n });
-  board = new Board(board.rows());
 
   _.each(board.rows(), function (row, yidx) {
     _.each(row, function (cell, xidx) {
@@ -65,10 +64,11 @@ window.countNRooksSolutions = function(n, board, count){
       _.each(row, function (cell, xidx) {
         if (cell === 0){
 
-          // var dupedBoard = new Board(board.rows());
-          board.insert(xidx, yidx, 1); //inserting fo realz
-          count += countNRooksSolutions(n, board, count);
-          if (count ===1){debugger;}
+          var dupedBoard = new Board(copyArray(board.rows()));
+
+          dupedBoard.insert(xidx, yidx, 1); //inserting fo realz
+          count = countNRooksSolutions(n, dupedBoard, count);
+
         }
       });
     });
@@ -78,7 +78,13 @@ window.countNRooksSolutions = function(n, board, count){
   return count;
 };
 
-
+window.copyArray = function(arr){
+  var result = [];
+  for(var i = 0; i < arr.length; i++){
+    result.push(arr[i].slice(0));
+  }
+  return result;
+}
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n){
