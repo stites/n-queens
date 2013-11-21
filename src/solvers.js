@@ -10,7 +10,6 @@
 // (There are also optimizations that will allow you to skip a lot of the dead search space)
 // take a look at solversSpec.js to see what the tests are expecting
 
-
 // return a matrix (an array of arrays) representing a single nxn chessboard, 
 // with n rooks placed such that none of them can attack each other
 window.findNRooksSolution = function(n){
@@ -30,52 +29,59 @@ window.findNRooksSolution = function(n){
 
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-window.countNRooksSolutions = function(n, board, count){
-  count = count || 0;
-  board = board || new Board({'n': n });
+window.countNRooksSolutions = function(n){
+  var memo = {};
+  var recurse = function(n, board){
+    board = board || new Board({'n': n });
 
-  _.each(board.rows(), function (row, yidx) {
-    _.each(row, function (cell, xidx) {
-      if (cell === 0){
-        board.insert(xidx, yidx, 1);
-      }
-      if (board.hasAnyRooksConflicts()){
-        board.insert(xidx, yidx, 'X');
-      } else {
-        if(cell !== 1 && cell !== 'X'){
-          board.insert(xidx, yidx, 0);
-        }
-      }
-    });
-  });
-
-  // if (JSON.stringify(board.rows()) === JSON.stringify([[1,"X"],["X",1]])){
-  //   debugger;
-  // }
-  console.table(board.rows());
-  if ( board.countThings(0) === 0 ){
-    // countThings will count the number of the
-    // passed in value that are contained in the board
-    if (board.countThings(1) >= n){
-      count++;
-    }
-  } else {
     _.each(board.rows(), function (row, yidx) {
       _.each(row, function (cell, xidx) {
         if (cell === 0){
-
-          var dupedBoard = new Board(copyArray(board.rows()));
-
-          dupedBoard.insert(xidx, yidx, 1); //inserting fo realz
-          count = countNRooksSolutions(n, dupedBoard, count);
-
+          board.insert(xidx, yidx, 1);
+        }
+        if (board.hasAnyRooksConflicts()){
+          board.insert(xidx, yidx, 'X');
+        } else {
+          if(cell !== 1 && cell !== 'X'){
+            board.insert(xidx, yidx, 0);
+          }
         }
       });
     });
-  }
 
-  console.log('Number of solutions for ' + n + ' rooks:', count);
-  return count;
+    // if (JSON.stringify(board.rows()) === JSON.stringify([[1,"X"],["X",1]])){
+    //   debugger;
+    // }
+    if ( board.countThings(0) === 0 ){
+      // countThings will count the number of the
+      // passed in value that are contained in the board
+      if (board.countThings(1) >= n){
+        var key = JSON.stringify(board.rows());
+        memo[key] = true;
+        // count++;
+      }
+    } else {
+      _.each(board.rows(), function (row, yidx) {
+        _.each(row, function (cell, xidx) {
+          if (cell === 0){
+
+            var dupedBoard = new Board(copyArray(board.rows()));
+
+            dupedBoard.insert(xidx, yidx, 1); //inserting fo realz
+            recurse(n, dupedBoard);
+
+          }
+        });
+      });
+    }
+  }
+  recurse(n);
+  var keyCount = 0;
+  for (var keys in memo){
+    keyCount++;
+  }
+  console.log('Number of solutions for ' + n + ' rooks:', keyCount);
+  return keyCount;
 };
 
 window.copyArray = function(arr){
