@@ -166,6 +166,8 @@ window.countNQueensSolutions = function(n){
   var y = 0;
   var coords = [];
   var maxStep = n - 1;
+  var result;
+
   while(maxStep){
     if(path === "right"){
       coords.push([x,y]);
@@ -212,10 +214,39 @@ window.countNQueensSolutions = function(n){
       coords.push([coord, coord]);
     }
   }
-  var checker = function(arrCords){
+
+  var cols = Array.apply(null, new Array(n)).map(Number.prototype.valueOf,0);
+  var rows = Array.apply(null, new Array(n)).map(Number.prototype.valueOf,0);
+
+  // pre-vetted intitialized boards
+  for (var i = 0; i < coords.length; i++) {
+    cols[ coords[i][0] ] = 1;   //[0,1,0,0,0]
+    rows[ coords[i][1] ] = 1;   //[1,0,0,0,0]
+    var queenPosX = coords[i][0];
+    var queenPosY = coords[i][1];
+
+    result += recur(rows, cols, { queenPosX+":"+queenPosY:true });
+  };
+
+  var recur = function(arrRows, arrCols, queenPositions){
+    for (x = 0; x < arrRows.length; x++) {
+      for (y = 0; y < arrCols.length; y++) {
+        if(_.reduce(arrRows.concat(arrCols), function(sum, num){ return sum + num}, 0) === n*2 ){
+          result += returnWeightedSymmetry(queenPositions, n);
+        }
+        if (arrRows[x] === 0 && arrCols[y] === 0){
+          arrRows[x] = 1;
+          arrCols[y] = 1;
+          queenPositions[x + ":" + y] = true;
+          recur(arrRows, arrCols, queenPositions);
+        }
+      };
+    };
+    // generate solutions
 
   }
-}
+  return result;
+};
 
 window.returnWeightedSymmetry = function(obj, n){
   var newObj = {};
