@@ -102,7 +102,159 @@ window.findNQueensSolution = function(n){
 
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
+window.countNQueensSolutionsNaive = function(n){
+  var memo = {};
+  var recurse = function(n, board){
+    board = board || new Board({'n': n });
+
+    _.each(board.rows(), function (row, yidx) {
+      _.each(row, function (cell, xidx) {
+        if (cell === 0){
+          board.insert(xidx, yidx, 1);
+        }
+        if (board.hasAnyQueensConflicts()){
+          board.insert(xidx, yidx, 'X');
+        } else {
+          if(cell !== 1 && cell !== 'X'){
+            board.insert(xidx, yidx, 0);
+          }
+        }
+      });
+    });
+
+    // if (JSON.stringify(board.rows()) === JSON.stringify([[1,"X"],["X",1]])){
+    //   debugger;
+    // }
+    if ( board.countThings(0) === 0 ){
+      // countThings will count the number of the
+      // passed in value that are contained in the board
+      if (board.countThings(1) >= n){
+        var key = JSON.stringify(board.rows());
+        memo[key] = true;
+        // count++;
+      }
+    } else {
+      _.each(board.rows(), function (row, yidx) {
+        _.each(row, function (cell, xidx) {
+          if (cell === 0){
+
+            var dupedBoard = new Board(copyArray(board.rows()));
+
+            dupedBoard.insert(xidx, yidx, 1); //inserting fo realz
+            recurse(n, dupedBoard);
+
+          }
+        });
+      });
+    }
+  }
+  recurse(n);
+  var keyCount = 0;
+  for (var keys in memo){
+    keyCount++;
+  }
+  console.log('Number of solutions for ' + n + ' rooks:', keyCount);
+  return keyCount;
+
+};
+
+
 window.countNQueensSolutions = function(n){
+  var path = "right";
+  var stepper = 0;
+  var x = 0;
+  var y = 0;
+  var coords = [];
+  var maxStep = n - 1;
+  while(maxStep){
+    if(path === "right"){
+      coords.push([x,y]);
+      stepper++;
+      x++;
+      if(stepper === maxStep){
+        path = "down";
+        stepper = 0;
+        maxStep -= 2
+      }
+    }
+    if(path === "down"){
+      coords.push([x,y]);
+      stepper++;
+      y++;
+      if(stepper === maxStep){
+        path = "left";
+        stepper = 0;
+        maxStep -= 2;
+      }
+    }
+    if(path === "left"){
+      coords.push([x,y]);
+      stepper++;
+      x--;
+      if(stepper === maxStep){
+        path = "up";
+        stepper = 0;
+        maxStep -= 2;
+      }
+    }
+    if(path === "up"){
+      coords.push([x,y]);
+      stepper++;
+      y--;
+      if(stepper === maxStep){
+        path = "right";
+        stepper = 0;
+        maxStep -= 2;
+      }
+    }
+    if(n % 2){
+      var coord = ~~(n/2 + 1);
+      coords.push([coord, coord]);
+    }
+  }
+  var checker = function(arrCords){
+
+  }
+}
+
+window.returnWeightedSymmetry = function(obj, n){
+  var newObj = {};
+  var coords, x, y;
+
+  // rotate 90 degrees
+  _.each(obj, function(item, key){
+    coords = key.split(":");
+    x = coords[0];
+    y = coords[1];
+    x = n - y;
+    y = n - x;
+    newObj[x + ":" + y] = true;
+
+  })
+
+  if (JSON.stringify(obj) === JSON.stringify(newObj)){
+    // symmetry is 4-rotational. we're done and don't need to check further.
+    return 1;
+  }
+
+  // rotate 180 degrees
+  _.each(obj, function(item, key){
+    coords = key.split(":");
+    x = coords[0];
+    y = coords[1];
+    x = n - x;
+    y = n - y;
+    newObj[]
+  })
+
+  if (JSON.stringify(obj) === JSON.stringify(newObj)){
+    // symmetry is 2-rotational
+    return 2;
+  }
+  return 4;
+}
+
+window.countNQueensSolutionsNaive = function(n){
   var memo = {};
   var recurse = function(n, board){
     board = board || new Board({'n': n });
@@ -156,3 +308,4 @@ window.countNQueensSolutions = function(n){
   console.log('Number of solutions for ' + n + ' rooks:', keyCount);
   return keyCount;
 };
+
