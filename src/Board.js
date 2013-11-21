@@ -107,7 +107,7 @@
       for(var y = 0; y < this.attributes.n; y++){
         column.push(board[y][colIndex]);
       }
-      return _.reduce(column, function(result, n){ return result + n }, 0) > 1;
+      return _.filter( column, function(i){ return i === 1; }).length > 1;
     },
 
     // test if any columns on this board contain conflicts
@@ -138,7 +138,7 @@
         x++;
         y++;
       }
-      return _.reduce(diagonal, function(result, n){ return result + n }, 0) > 1;
+      return _.filter( diagonal, function(i){ return i === 1; }).length > 1;
     },
 
     valueAt: function(x, y){
@@ -148,6 +148,10 @@
         value = board[y][x];
       }
       return value;
+    },
+
+    insert: function(x, y, value){
+      this.attributes[y][x] = value;
     },
 
     // test if any major diagonals on this board contain conflicts
@@ -182,7 +186,7 @@
         x--;
         y++;
       }
-      return _.reduce(diagonal, function(result, n){ return result + n }, 0) > 1;
+      return _.filter( diagonal, function(i){ return i === 1; }).length > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts

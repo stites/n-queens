@@ -20,31 +20,50 @@ window.findNRooksSolution = function(n){
   // reassign board[rowIdx]= 1
   // return board
   var solution = (new Board({'n':n})).rows();
-  // debugger;
   for(var i = 0; i < n; i++){
     solution[i][i] = 1;
   }
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  // debugger;
   return solution;
 };
 
 
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-window.countNRooksSolutions = function(n){
-  var solution = (new Board({'n':n})).rows();
-
-  for (var y = 0; y < n; y++) {
-    for (var x = 0; x < n; x++) {
-      solution[y][x] = 1;
-      solution.slice(0);
-      countNRooksSolutions(n, )
-    };
-  };
+window.countNRooksSolutions = function(n, board, count){
+  count = count || 0;
+  board = board || new Board({'n': n });
+  _.each(board.rows(), function (row, yidx) {
+    _.each(row, function (cell, xidx) {
+      if (cell === 0){
+        board.insert(xidx, yidx, 1);
+      }
+      if (board.hasAnyRooksConflicts()){
+        board.insert(xidx, yidx, 'X');
+      } else {
+        board.insert(xidx, yidx, 0);
+      }
+    });
+  });
+  var noZeros = !_(board.rows()).chain().flatten().filter(function(i){return i === 0}).length;
+  if ( noZeros ){
+    if (board.countRooks() > n){
+      count++;
+    }
+  } else {
+    _.each(board.rows(), function (row, yidx) {
+      _.each(row, function (cell, xidx) {
+        if (cell === 0){
+          board.insert(xidx, yidx, 1); //inserting fo realz
+          var dupeBoard = Object.create(board);
+          countNRooksSolutions(n, dupeBoard);
+        }
+      });
+    });
+  }
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  return count;
 };
 
 
