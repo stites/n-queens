@@ -8,9 +8,9 @@
 
     initialize: function (params) {
       if (typeof params == "undefined" || params == null) {
-        console.log('Good guess! But to use the Board() constructor, you must pass it an argument in one of the following formats:');
-        console.log('\t1. An object. To create an empty board of size n:\n\t\t{n: %c<num>%c} - Where %c<num> %cis the dimension of the (empty) board you wish to instantiate\n\t\t%cEXAMPLE: var board = new Board({n:5})', 'color: blue;', 'color: black;','color: blue;', 'color: black;', 'color: grey;');
-        console.log('\t2. An array of arrays (a matrix). To create a populated board of size n:\n\t\t[ [%c<val>%c,%c<val>%c,%c<val>%c...], [%c<val>%c,%c<val>%c,%c<val>%c...], [%c<val>%c,%c<val>%c,%c<val>%c...] ] - Where each %c<val>%c is whatever value you want at that location on the board\n\t\t%cEXAMPLE: var board = new Board([[1,0,0],[0,1,0],[0,0,1]])', 'color: blue;', 'color: black;','color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: grey;');
+        // console.log('Good guess! But to use the Board() constructor, you must pass it an argument in one of the following formats:');
+        // console.log('\t1. An object. To create an empty board of size n:\n\t\t{n: %c<num>%c} - Where %c<num> %cis the dimension of the (empty) board you wish to instantiate\n\t\t%cEXAMPLE: var board = new Board({n:5})', 'color: blue;', 'color: black;','color: blue;', 'color: black;', 'color: grey;');
+        // console.log('\t2. An array of arrays (a matrix). To create a populated board of size n:\n\t\t[ [%c<val>%c,%c<val>%c,%c<val>%c...], [%c<val>%c,%c<val>%c,%c<val>%c...], [%c<val>%c,%c<val>%c,%c<val>%c...] ] - Where each %c<val>%c is whatever value you want at that location on the board\n\t\t%cEXAMPLE: var board = new Board([[1,0,0],[0,1,0],[0,0,1]])', 'color: blue;', 'color: black;','color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: blue;', 'color: black;', 'color: grey;');
       } else if (params.hasOwnProperty('n')) {
         this.set(makeEmptyMatrix(this.get('n')));
       } else {
@@ -71,8 +71,29 @@
 
  */
     /*=========================================================================
-    =                 TODO: fill in these Helper Functions                    =
     =========================================================================*/
+    // UTILITY FUNCTIONS:
+    // --------------------------------------------------------------
+    valueAt: function(x, y){
+      var value = undefined;
+      var board = this.attributes;
+      if(board[y] && board[y][x] !== undefined){
+        value = board[y][x];
+      }
+      return value;
+    },
+
+    insert: function(x, y, value){
+      this.attributes[y][x] = value;
+    },
+
+    countThings: function (thing) {
+      var everything = _.flatten(this.rows());
+      var justTheThings = _.filter(everything, function(item){
+        return item === thing;
+      });
+      return justTheThings.length;
+    },
 
     // ROWS - run from left to right
     // --------------------------------------------------------------
@@ -85,11 +106,20 @@
     },
 
     hasAnyRowConflicts: function(){
+<<<<<<< HEAD
       var that = this;
       var board = this.rows();
       return _.reduce(board, function(memo, item, idx){
         return memo || that.hasRowConflictAt(idx);
       }, false);
+=======
+      for(var y = 0; y < this.attributes.n; y++){
+        if(this.hasRowConflictAt(y)){
+          return true;
+        }
+      }
+      return false;
+>>>>>>> 177e064c8b067e8e45bed13d0df3fe10d0da1b96
     },
 
     // COLUMNS - run from top to bottom
@@ -110,6 +140,7 @@
 
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex){
+<<<<<<< HEAD
       return _.filter( this.cols()[colIndex], function(i){
         return i === 1;
       }).length > 1;
@@ -117,11 +148,20 @@
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function(){
+<<<<<<< HEAD
       var that = this;
       var board = this.cols();
       return _.reduce(board, function(memo, item, idx){
         return memo || that.hasColConflictAt(idx);
       }, false);
+=======
+      for(var x = 0; x < this.attributes.n; x++){
+        if(this.hasColConflictAt(x)){
+          return true;
+        }
+      }
+      return false;
+>>>>>>> 177e064c8b067e8e45bed13d0df3fe10d0da1b96
     },
 
 
@@ -133,40 +173,24 @@
     hasMajorDiagonalConflictAt: function(x, y){
       var diagonal = [];
       var i;
-      var count = 0;
-      for(i = 0; i < 4; i++){
+
+      for( ; x < this.attributes.n; x++, y++){
         if(this.valueAt(x,y) === undefined){
           break;
         }
-        diagonal.concat(this.valueAt(x,y));
-        x++;
-        y++;
+        diagonal.push(this.valueAt(x,y));
       }
-      for(i = 0; i < diagonal.length; i++){
-        if (diagonal[i] > 0){
-          count++;
-        }
-      }
-      return count > 1;
-    },
-
-    valueAt: function(x, y){
-      var value = undefined;
-      var board = this.attributes;
-      if(board[y] && board[y][x] !== undefined){
-        value = board[y][x];
-      }
-      return value;
+      return _.filter( diagonal, function(i){ return i === 1; }).length > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function(){
-      for(var x = 0; x < 4; x++){
+      for(var x = 0; x < this.attributes.n ; x++){
         if(this.hasMajorDiagonalConflictAt(x, 0)){
           return true;
         }
       }
-      for(var y = 1; y < 4; y++){
+      for(var y = 1; y < this.attributes.n ; y++){
         if(this.hasMajorDiagonalConflictAt(0, y)){
           return true;
         }
@@ -180,14 +204,34 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow){
-      return false; // fixme
+    hasMinorDiagonalConflictAt: function(x, y){
+      var diagonal = [];
+      var i;
+      for(i = 0; i < 4; i++){
+        if(this.valueAt(x,y) === undefined){
+          break;
+        }
+        diagonal.push(this.valueAt(x,y));
+        x--;
+        y++;
+      }
+      return _.filter( diagonal, function(i){ return i === 1; }).length > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function(){
-      return false; // fixme
-    }
+      for(var x = this.attributes.n - 1 ; x >= 0 ; x--){
+        if(this.hasMinorDiagonalConflictAt(x, 0)){
+          return true;
+        }
+      }
+      for(var y = 1; y < this.attributes.n ; y++){
+        if(this.hasMinorDiagonalConflictAt(this.attributes.n - 1, y)){
+          return true;
+        }
+      }
+      return false;
+    },
 
     /*--------------------  End of Helper Functions  ---------------------*/
 
