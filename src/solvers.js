@@ -362,58 +362,26 @@ window.countNRooksSolutions = function(n){
 }
 
 window.countNQueensSolutions = function(n){
-  // console.log(n + ' queens:');
   var solutionCount = 0;
-  var col = Array.apply(null, new Array(n)).map(Number.prototype.valueOf,0);
-  var maj = Array.apply(null, new Array(n+n-1)).map(Number.prototype.valueOf,0);
-  var min = Array.apply(null, new Array(n+n-1)).map(Number.prototype.valueOf,0);
-  var minIdx;
-  var majIdx;
-  
-
+  var col = new Int8Array(n);
+  var maj = new Int8Array(n+n-1);
+  var min = new Int8Array(n+n-1);
+  var minIdx, majIdx;
   var recurse = function(rowNum, col, majDiag, minDiag){
-    // console.log('RECURSION',rowNum);
     for(var j = 0; j < n; j++){
-      // col = [0, 1, 0]
-      // index has maj conflict ? col[i] = 1 : col[i] = 0;
-      // majconflict is at index i
-      // index has min conflict ? col[i] = 1 : col[i] = 0;
-      // minconflict is at index j
-      // if col[i] === 0
-      //   col[i] = 1
-      //   queencount++
-      //   insert the proper majindex conflict
-      //   insert the proper minindex conflict
-      // col[majconflictindex] = 0
-      // col[minconflictindex] = 0
-      // recurse(col, majarray, minarray, rowNum)
-      // col[i] = 0
-      // debugger;
       minIdx = minDiagonalIdx(n, j, rowNum);
       majIdx = majDiagonalIdx(n, j, rowNum);
-      if (rowNum === 1 && j === 2 && n === 4){ debugger;}
-      if( majDiag[majIdx] ){
+      if( majDiag[majIdx] || minDiag[minIdx] ){
         continue;
       }
-      if( minDiag[minIdx] ){
-        continue;
-      }
-
       if(col[j] === 0){
         if( rowNum === n - 1 ){
-          solutionCount++;
-          // console.log('solutionCount:', solutionCount)
-          return;
+          return solutionCount++;
         }
         col[j] = 1;
         majDiag[majIdx] = 1;
         minDiag[minIdx] = 1;
-
-        // console.log('col',col);
-        // console.log('majDiag',majDiag);
-        // console.log('minDiag',minDiag);
-        if (rowNum === 1 && j === 3 && n === 4){ debugger;}
-        recurse(rowNum+1, col.slice(0), majDiag.slice(0), minDiag.slice(0));
+        recurse(rowNum+1, col, majDiag, minDiag);
         col[j]=0;
         minIdx = minDiagonalIdx(n, j, rowNum);
         majIdx = majDiagonalIdx(n, j, rowNum);
@@ -423,8 +391,6 @@ window.countNQueensSolutions = function(n){
     }
   }
   recurse(0, col, maj, min);
-  // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  // console.log('\n==============================\n')
   return solutionCount;
 
 }
