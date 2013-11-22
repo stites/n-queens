@@ -338,40 +338,58 @@ window.returnWeightedSymmetry = function(obj, n){
 //   return keyCount;
 // };
 
-window.countNRooksSolutionsBitwise = function(n){
+window.countNRooksSolutions = function(n){
   var solutionCount = 0;
-  var row = Array.apply(null, new Array(n)).map(Number.prototype.valueOf,0);
-  var col = Array.apply(null, new Array(n)).map(Number.prototype.valueOf,0);
-
-  // var maj = new Int8Array(n+n-1);
-  // var min = new Int8Array(n+n-1);
-
-  var recurse = function(rows, cols){
-    // var sum = _.reduce(rows.concat(cols), function(result, value){
-    //   return result + value;
-    // }, 0);
+  var col = new Int8Array(n);
+  var recurse = function(cols){
     var sum = _.reduce(cols, function(result, value){
       return result + value;
     }, 0);
-    if( sum === n){//(2 * n)){
+    if( sum === n){
+      solutionCount++;
+      return;
+    }
+      for(var j = 0; j < n; j++){
+        if(cols[j] === 0){
+          cols[j] = 1;
+          recurse(cols);
+          cols[j] = 0;
+      }
+    }
+  }
+  recurse(col);
+  return solutionCount;
+}
+
+window.countNQueensSolutions = function(n){
+  var solutionCount = 0;
+  var row = Array.apply(null, new Array(n)).map(Number.prototype.valueOf,0);
+  var col = Array.apply(null, new Array(n)).map(Number.prototype.valueOf,0);
+  var maj = Array.apply(null, new Array(n+n-1)).map(Number.prototype.valueOf,0);
+  var min = Array.apply(null, new Array(n+n-1)).map(Number.prototype.valueOf,0);
+  // var maj = new Int8Array(n+n-1);
+
+  var recurse = function(rowNum, cols){
+    rowNum = rowNum || 0;
+    var sum = _.reduce(cols, function(result, value){
+      return result + value;
+    }, 0);
+    if( sum === n){
       solutionCount++;
       console.log('solutionCount:', solutionCount)
       return;
     }
-    // for(var i = 0; i < n; i++){
-      for(var j = 0; j < n; j++){
-        if(cols[j] === 0){
-          // rows[i] = 1;
-          cols[j] = 1;
-          console.log('rows', rows);
-          console.log('cols', cols);
-          recurse(rows, cols); // [1,0]  [1,0]
-          // rows[i] = 0;
-          cols[j] = 0;
-        // }
+    for(var j = 0; j < n; j++){
+      if(cols[j] === 0 && majTranslatedcol() === false && minTranslatedCol() === false){
+        cols[j] = 1;
+        generateMajBlocks();
+        generateMinorBlocks();
+        console.log('rows', rows);
+        console.log('cols', cols);
+        recurse(rowNum+1, cols);
+        cols[j] = 0;
       }
     }
+    recurse(row, col);
+    return solutionCount;
   }
-  recurse(row, col);
-  return solutionCount;
-}
