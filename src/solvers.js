@@ -244,45 +244,45 @@
 // }
 
 
-window.returnWeightedSymmetry = function(obj, n){
-  var newObj = {};
-  var coords, x, y;
-  var coord;
+// window.returnWeightedSymmetry = function(obj, n){
+//   var newObj = {};
+//   var coords, x, y;
+//   var coord;
 
-  // rotate 90 degrees
-  _.each(obj, function(item, key){
-    coords = key.split(":");
-    x = coords[0];
-    y = coords[1];
-    x = n - y;
-    y = n - x;
-    coord = x + ":" + y;
-    newObj[coord] = true;
+//   // rotate 90 degrees
+//   _.each(obj, function(item, key){
+//     coords = key.split(":");
+//     x = coords[0];
+//     y = coords[1];
+//     x = n - y;
+//     y = n - x;
+//     coord = x + ":" + y;
+//     newObj[coord] = true;
 
-  })
+//   })
 
-  if (JSON.stringify(obj) === JSON.stringify(newObj)){
-    // symmetry is 4-rotational. we're done and don't need to check further.
-    return 1;
-  }
+//   if (JSON.stringify(obj) === JSON.stringify(newObj)){
+//     // symmetry is 4-rotational. we're done and don't need to check further.
+//     return 1;
+//   }
 
-  // rotate 180 degrees
-  _.each(obj, function(item, key){
-    coords = key.split(":");
-    x = coords[0];
-    y = coords[1];
-    x = n - x;
-    y = n - y;
-    coord = x + ":" + y;
-    newObj[coord] = true;
-  })
+//   // rotate 180 degrees
+//   _.each(obj, function(item, key){
+//     coords = key.split(":");
+//     x = coords[0];
+//     y = coords[1];
+//     x = n - x;
+//     y = n - y;
+//     coord = x + ":" + y;
+//     newObj[coord] = true;
+//   })
 
-  if (JSON.stringify(obj) === JSON.stringify(newObj)){
-    // symmetry is 2-rotational
-    return 2;
-  }
-  return 4;
-}
+//   if (JSON.stringify(obj) === JSON.stringify(newObj)){
+//     // symmetry is 2-rotational
+//     return 2;
+//   }
+//   return 4;
+// }
 // window.countNQueensSolutionsNaive = function(n){
 //   var memo = {};
 //   var recurse = function(n, board){
@@ -362,34 +362,79 @@ window.countNRooksSolutions = function(n){
 }
 
 window.countNQueensSolutions = function(n){
+  // console.log(n + ' queens:');
   var solutionCount = 0;
-  var row = Array.apply(null, new Array(n)).map(Number.prototype.valueOf,0);
   var col = Array.apply(null, new Array(n)).map(Number.prototype.valueOf,0);
   var maj = Array.apply(null, new Array(n+n-1)).map(Number.prototype.valueOf,0);
   var min = Array.apply(null, new Array(n+n-1)).map(Number.prototype.valueOf,0);
-  // var maj = new Int8Array(n+n-1);
+  var minIdx;
+  var majIdx;
+  
 
-  var recurse = function(rowNum, cols){
-    rowNum = rowNum || 0;
-    var sum = _.reduce(cols, function(result, value){
-      return result + value;
-    }, 0);
-    if( sum === n){
-      solutionCount++;
-      console.log('solutionCount:', solutionCount)
-      return;
-    }
+  var recurse = function(rowNum, col, majDiag, minDiag){
+    // console.log('RECURSION',rowNum);
     for(var j = 0; j < n; j++){
-      if(cols[j] === 0 && majTranslatedcol() === false && minTranslatedCol() === false){
-        cols[j] = 1;
-        generateMajBlocks();
-        generateMinorBlocks();
-        console.log('rows', rows);
-        console.log('cols', cols);
-        recurse(rowNum+1, cols);
-        cols[j] = 0;
+      // col = [0, 1, 0]
+      // index has maj conflict ? col[i] = 1 : col[i] = 0;
+      // majconflict is at index i
+      // index has min conflict ? col[i] = 1 : col[i] = 0;
+      // minconflict is at index j
+      // if col[i] === 0
+      //   col[i] = 1
+      //   queencount++
+      //   insert the proper majindex conflict
+      //   insert the proper minindex conflict
+      // col[majconflictindex] = 0
+      // col[minconflictindex] = 0
+      // recurse(col, majarray, minarray, rowNum)
+      // col[i] = 0
+      // debugger;
+      minIdx = minDiagonalIdx(n, j, rowNum);
+      majIdx = majDiagonalIdx(n, j, rowNum);
+      if (rowNum === 1 && j === 2 && n === 4){ debugger;}
+      if( majDiag[majIdx] ){
+        continue;
+      }
+      if( minDiag[minIdx] ){
+        continue;
+      }
+
+      if(col[j] === 0){
+        if( rowNum === n - 1 ){
+          solutionCount++;
+          // console.log('solutionCount:', solutionCount)
+          return;
+        }
+        col[j] = 1;
+        majDiag[majIdx] = 1;
+        minDiag[minIdx] = 1;
+
+        // console.log('col',col);
+        // console.log('majDiag',majDiag);
+        // console.log('minDiag',minDiag);
+        if (rowNum === 1 && j === 3 && n === 4){ debugger;}
+        recurse(rowNum+1, col.slice(0), majDiag.slice(0), minDiag.slice(0));
+        col[j]=0;
+        minIdx = minDiagonalIdx(n, j, rowNum);
+        majIdx = majDiagonalIdx(n, j, rowNum);
+        majDiag[majIdx] = 0;
+        minDiag[minIdx] = 0;
       }
     }
-    recurse(row, col);
-    return solutionCount;
   }
+  recurse(0, col, maj, min);
+  // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  // console.log('\n==============================\n')
+  return solutionCount;
+
+}
+
+window.majDiagonalIdx = function(n, x, y){
+  var majDiagIndex = (n - 1) + (x - y);
+  return majDiagIndex;
+}
+
+window.minDiagonalIdx = function(n, x, y){
+  var majDiagIndex = x + y;
+  return majDiagIndex;
+}
