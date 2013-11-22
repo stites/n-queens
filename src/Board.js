@@ -151,13 +151,11 @@
       var diagonal = [];
       var i;
 
-      for(i = 0; i < this.attributes.n; i++){
+      for( ; x < this.attributes.n; x++, y++){
         if(this.valueAt(x,y) === undefined){
           break;
         }
         diagonal.push(this.valueAt(x,y));
-        x++;
-        y++;
       }
       return _.filter( diagonal, function(i){ return i === 1; }).length > 1;
     },
