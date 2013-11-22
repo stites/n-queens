@@ -362,38 +362,43 @@ window.countNRooksSolutions = function(n){
 }
 
 window.countNQueensSolutions = function(n){
-  var solutionCount = 0;
-  var col = new Int8Array(n);
-  var maj = new Int8Array(n+n-1);
-  var min = new Int8Array(n+n-1);
-  var minIdx, majIdx;
-  var recurse = function(rowNum, col, majDiag, minDiag){
-    for(var j = 0; j < n; j++){
-      minIdx = minDiagonalIdx(n, j, rowNum);
-      majIdx = majDiagonalIdx(n, j, rowNum);
-      if( majDiag[majIdx] || minDiag[minIdx] ){
+  var
+    solutionCount=0,
+    col=new Int8Array(n),
+    maj=new Int8Array(n+n-1),
+    min=new Int8Array(n+n-1),
+    minIdx,
+    majIdx;
+  var recurse=function(x, col, majDiag, minDiag){
+    for(var y=0;y<n;y++){
+      if(majDiag[(n-1)+(x-y)]||minDiag[x+y]){
         continue;
       }
-      if(col[j] === 0){
-        if( rowNum === n - 1 ){
+      if(col[y]===0){
+        if(x===n-1){
           return solutionCount++;
         }
-        col[j] = 1;
-        majDiag[majIdx] = 1;
-        minDiag[minIdx] = 1;
-        recurse(rowNum+1, col, majDiag, minDiag);
-        col[j]=0;
-        minIdx = minDiagonalIdx(n, j, rowNum);
-        majIdx = majDiagonalIdx(n, j, rowNum);
-        majDiag[majIdx] = 0;
-        minDiag[minIdx] = 0;
+        col[y] = 1;
+        majDiag[(n-1)+(x-y)]=1;
+        minDiag[x+y]=1;
+        recurse(x+1, col, majDiag, minDiag);
+        col[y]=0;
+        majDiag[(n-1)+(x-y)] = 0;
+        minDiag[x+y] = 0;
       }
     }
   }
-  recurse(0, col, maj, min);
+  recurse(0,col,maj,min);
   return solutionCount;
-
 }
+// function millisecondsToTime(milli)
+// {
+//       var milliseconds = milli % 1000;
+//       var seconds = Math.floor((milli / 1000) % 60);
+//       var minutes = Math.floor((milli / (60 * 1000)) % 60);
+
+//       return minutes + ":" + seconds + "." + milliseconds;
+// }
 
 window.majDiagonalIdx = function(n, x, y){
   var majDiagIndex = (n - 1) + (x - y);
