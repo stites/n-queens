@@ -106,11 +106,20 @@
     },
 
     hasAnyRowConflicts: function(){
+<<<<<<< HEAD
       var that = this;
       var board = this.rows();
       return _.reduce(board, function(memo, item, idx){
         return memo || that.hasRowConflictAt(idx);
       }, false);
+=======
+      for(var y = 0; y < this.attributes.n; y++){
+        if(this.hasRowConflictAt(y)){
+          return true;
+        }
+      }
+      return false;
+>>>>>>> 177e064c8b067e8e45bed13d0df3fe10d0da1b96
     },
 
     // COLUMNS - run from top to bottom
@@ -131,18 +140,37 @@
 
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex){
+<<<<<<< HEAD
       return _.filter( this.cols()[colIndex], function(i){
         return i === 1;
       }).length > 1;
+=======
+      var column = [];
+      var board  = this.attributes;
+
+      for(var y = 0; y < this.attributes.n; y++){
+        column.push(board[y][colIndex]);
+      }
+      return _.filter( column, function(i){ return i === 1; }).length > 1;
+>>>>>>> 177e064c8b067e8e45bed13d0df3fe10d0da1b96
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function(){
+<<<<<<< HEAD
       var that = this;
       var board = this.cols();
       return _.reduce(board, function(memo, item, idx){
         return memo || that.hasColConflictAt(idx);
       }, false);
+=======
+      for(var x = 0; x < this.attributes.n; x++){
+        if(this.hasColConflictAt(x)){
+          return true;
+        }
+      }
+      return false;
+>>>>>>> 177e064c8b067e8e45bed13d0df3fe10d0da1b96
     },
 
 
