@@ -58,7 +58,7 @@ describe("solvers", function() {
     });
 
     it('finds the number of valid solutions for n of 9-12', function(){
-      _.range(9, 12).map(function(n){
+      _.range(9, 13).map(function(n){
         var solutionCount = countNQueensSolutions(n);
         var expectedSolutionCount = [352, 724, 2680, 14200][n-9];
         console.log('benchmark for '+n+' queens:')
@@ -67,7 +67,7 @@ describe("solvers", function() {
     });
 
     it('finds the number of valid solutions for n of 13-16', function(){
-      _.range(13, 16).map(function(n){
+      _.range(13, 17).map(function(n){
         var solutionCount = countNQueensSolutions(n);
         var expectedSolutionCount = [73712, 365596, 2279184, 14772512][n-13];
         console.log('benchmark for '+n+' queens:')
