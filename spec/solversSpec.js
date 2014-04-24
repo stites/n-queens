@@ -50,27 +50,27 @@ describe("solvers", function() {
 
     it('finds the number of valid solutions for n of 0-8', function(){
       _.range(1, 9).map(function(n){
+        console.log('benchmark for '+n+' queens:')
         var solutionCount = countNQueensSolutions(n);
         var expectedSolutionCount = [1, 1, 0, 0, 2, 10, 4, 40, 92][n];
-        console.log('benchmark for '+n+' queens:')
         expect(solutionCount).to.be.equal(expectedSolutionCount);
       });
     });
 
     it('finds the number of valid solutions for n of 9-12', function(){
       _.range(9, 13).map(function(n){
+        console.log('benchmark for '+n+' queens:')
         var solutionCount = countNQueensSolutions(n);
         var expectedSolutionCount = [352, 724, 2680, 14200][n-9];
-        console.log('benchmark for '+n+' queens:')
         expect(solutionCount).to.be.equal(expectedSolutionCount);
       });
     });
 
     it('finds the number of valid solutions for n of 13-16', function(){
       _.range(13, 17).map(function(n){
+        console.log('benchmark for '+n+' queens:')
         var solutionCount = countNQueensSolutions(n);
         var expectedSolutionCount = [73712, 365596, 2279184, 14772512][n-13];
-        console.log('benchmark for '+n+' queens:')
         expect(solutionCount).to.be.equal(expectedSolutionCount);
       });
     });
