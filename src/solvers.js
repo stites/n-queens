@@ -92,7 +92,7 @@ Q0=function(e){var z=new Date;var n=0,r=new Int8Array(e),i=new Int8Array(e+e-1),
 // 12Q @ 246ms
 Q1=function(e){var z=new Date;s=0,c=(1<<e)-1,f=function(e,t,n,r){var i=~(e|t|n)&r;while(i>0){var o=-i&i;i=i^o;f((e|o)<<1,t|o,(n|o)>>1,r)}t==r&&s++};f(0,0,0,c);console.log("RuanTime:",stime(new Date-z));return s}
 // 12Q @ 054ms
-stime=function(m){var ms=m%1000;var s=~~((m/1000)%60);var m=~~((m/(60*1000))%60);return m+":"+s+"."+ms+" (m:ss)";}
+stime=function(m){var ms=m%1000;var s=~~((m/1000)%60);var m=~~((m/(60*1000))%60);return m+":"+s+"."+ms+" (m:s)";}
 Q2=function(e){var t=0;var n=new Date;var r=function(n,i,s,o){if(n===e){return t++}for(var u=1;u<1<<e;u*=2){var a=i|s|o;if(!(a&u)){r(n+1,i+u,s+u>>1,o+u<<1)}}};r(0,0,0,0);console.log("EmmaTime:",stime(new Date-n));return t}
 
 countNQueensSolutions = Q0
