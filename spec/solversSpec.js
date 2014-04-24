@@ -66,11 +66,11 @@ describe("solvers", function() {
       });
     });
 
-    it('finds the number of valid solutions for n of 13-16', function(){
-      _.range(13, 17).map(function(n){
+    it('finds the number of valid solutions for n of 13-15', function(){
+      _.range(13, 16).map(function(n){
         console.log('benchmark for '+n+' queens:')
         var solutionCount = countNQueensSolutions(n);
-        var expectedSolutionCount = [73712, 365596, 2279184, 14772512][n-13];
+        var expectedSolutionCount = [73712, 365596, 2279184][n-13];
         expect(solutionCount).to.be.equal(expectedSolutionCount);
       });
     });
